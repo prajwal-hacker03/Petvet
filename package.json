@@ -1,0 +1,17 @@
+{
+  "name": "petcare-guide",
+  "version": "1.0.0",
+  "description": "PetCare Guide - A premium responsive platform for rescuing, adopting, and raising street pets.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y browser-sync start --server --files \"*.html, *.css, *.js\""
+  },
+  "keywords": [
+    "pet-rescue",
+    "pet-care",
+    "stray-animals",
+    "vet-finder"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

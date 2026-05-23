@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PetCare Guide - A premium platform for rescuing, adopting, and raising street pets. Detailed guidelines, vet finder, interactive tools, and an emergency AI pet rescue chatbot.">
+  <title>PetCare Guide - Adopt, Rescue & Care For Street Pets</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Local Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-theme">
+  <!-- Dynamic Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Glassmorphic Header Navigation -->
+  <header class="main-header glass-panel">
+    <div class="header-container">
+      <a href="#" class="logo-area" id="logo-nav">
+        <div class="logo-icon-bg">
+          <i class="fa-solid fa-paw logo-paw"></i>
+        </div>
+        <span class="logo-text">PetCare <span class="highlight">Guide</span></span>
+      </a>
+
+      <!-- Desktop Nav Menu -->
+      <nav class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link active" data-target="home"><i class="fa-solid fa-house"></i> Home</a></li>
+          <li><a href="#guides" class="nav-link" data-target="guides"><i class="fa-solid fa-book-open"></i> Care Guides</a></li>
+          <li><a href="#feeding" class="nav-link" data-target="feeding"><i class="fa-solid fa-bowl-food"></i> Feeding</a></li>
+          <li><a href="#rescue" class="nav-link" data-target="rescue"><i class="fa-solid fa-kit-medical"></i> Rescue Tips</a></li>
+          <li><a href="#vets" class="nav-link" data-target="vets"><i class="fa-solid fa-user-doctor"></i> Find Vets</a></li>
+          <li><a href="#adoption" class="nav-link" data-target="adoption"><i class="fa-solid fa-heart"></i> Adoption</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Nav controls -->
+      <div class="nav-controls">
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle dark mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-burger" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer glass-panel" id="mobile-drawer">
+    <ul class="mobile-nav-links">
+      <li><a href="#home" class="mobile-link active" data-target="home"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="#guides" class="mobile-link" data-target="guides"><i class="fa-solid fa-book-open"></i> Care Guides</a></li>
+      <li><a href="#feeding" class="mobile-link" data-target="feeding"><i class="fa-solid fa-bowl-food"></i> Feeding Guide</a></li>
+      <li><a href="#rescue" class="mobile-link" data-target="rescue"><i class="fa-solid fa-kit-medical"></i> Rescue Tips</a></li>
+      <li><a href="#vets" class="mobile-link" data-target="vets"><i class="fa-solid fa-user-doctor"></i> Nearby Vets</a></li>
+      <li><a href="#adoption" class="mobile-link" data-target="adoption"><i class="fa-solid fa-heart"></i> Adoption Hub</a></li>
+    </ul>
+  </div>
+
+  <!-- Search Bar Dropdown Overlay (Triggered by Search triggers) -->
+  <div class="search-overlay glass-panel" id="search-overlay">
+    <div class="search-container">
+      <input type="text" id="global-search-input" placeholder="Search pet care, timeline stages, vet locations..." aria-label="Global Search">
+      <button class="search-close-btn" id="search-close"><i class="fa-solid fa-times"></i></button>
+      <div id="search-results" class="search-results-grid"></div>
+    </div>
+  </div>
+
+  <main class="content-wrapper">
+    <!-- PAGE 1: HOME PAGE -->
+    <section id="home-view" class="view-section active">
+      <!-- Hero Banner -->
+      <div class="hero-section">
+        <div class="hero-bg-shapes">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
+        </div>
+        <div class="hero-grid container">
+          <div class="hero-text-content">
+            <div class="badge glass-card"><span class="badge-dot animate-pulse"></span> Helping Abandoned Animals</div>
+            <h1>Every Street Pet Deserves a <span class="gradient-text">Safe Home</span></h1>
+            <p class="hero-subtitle">Found an abandoned dog, cat, or a bird on the street? We provide beginner-friendly timelines, professional nutrition guides, local vet locators, and rescue toolkits to help you save and raise them successfully.</p>
+            <div class="hero-actions">
+              <a href="#guides" class="btn btn-primary" id="btn-explore-guides"><i class="fa-solid fa-compass"></i> Explore Care Guides</a>
+              <a href="#vets" class="btn btn-secondary" id="btn-find-vets"><i class="fa-solid fa-map-location-dot"></i> Find Nearby Vets</a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-card glass-card">
+                <span class="stat-num" id="stats-rescued">1,240+</span>
+                <span class="stat-label">Pets Saved</span>
+              </div>
+              <div class="stat-card glass-card">
+                <span class="stat-num" id="stats-vets">450+</span>
+                <span class="stat-label">Affiliated Vets</span>
+              </div>
+              <div class="stat-card glass-card">
+                <span class="stat-num" id="stats-adoptions">820+</span>
+                <span class="stat-label">Happy Adoptions</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-graphics">
+            <div class="hero-image-wrapper glass-card">
+              <!-- Beautiful Pure CSS Collage representing pets with custom layout -->
+              <div class="pet-collage">
+                <div class="collage-main-img shadow-lg" style="overflow: hidden;">
+                  <img src="hero-pets.png" alt="Rescued Pets" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="collage-sub-img cat-bubble shadow-lg">
+                  <div class="pet-avatar-placeholder cat-placeholder">
+                    <i class="fa-solid fa-cat"></i>
+                  </div>
+                </div>
+                <div class="collage-sub-img bird-bubble shadow-md">
+                  <div class="pet-avatar-placeholder bird-placeholder">
+                    <i class="fa-solid fa-dove"></i>
+                  </div>
+                </div>
+                <div class="rescue-tag-badge glass-card shadow-md">
+                  <i class="fa-solid fa-truck-medical text-primary"></i>
+                  <div class="badge-txt">
+                    <strong>Rescue Hub</strong>
+                    <span>24/7 Advice</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core Theme Intro Section -->
+      <section class="core-theme-section container">
+        <div class="section-header center">
+          <h2>Our Core Pillars: <span class="gradient-text">Adopt, Rescue, Care</span></h2>
+          <p class="section-subtext">How we empower every individual to become a local animal savior and supportive pet parent.</p>
+        </div>
+        <div class="theme-grid">
+          <div class="theme-card glass-card animate-hover-up">
+            <div class="icon-circle bg-orange">
+              <i class="fa-solid fa-kit-medical"></i>
+            </div>
+            <h3>1. Rescue Safely</h3>
+            <p>Immediate steps to secure, hydrate, and assess a street animal. Ensure your own safety while helping a distressed dog, cat, or bird.</p>
+            <a href="#rescue" class="learn-more-link" data-link="rescue">Emergency steps <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div class="theme-card glass-card animate-hover-up">
+            <div class="icon-circle bg-green">
+              <i class="fa-solid fa-prescription-bottle-medical"></i>
+            </div>
+            <h3>2. Build Care Habits</h3>
+            <p>From day one, master feeding timelines, safe food guides, vaccination charts, and essential training for smooth integration.</p>
+            <a href="#guides" class="learn-more-link" data-link="guides">Browse timeline <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div class="theme-card glass-card animate-hover-up">
+            <div class="icon-circle bg-teal">
+              <i class="fa-solid fa-house-chimney-heart"></i>
+            </div>
+            <h3>3. Rehome & Adopt</h3>
+            <p>Can't keep the pet permanently? Open your home temporarily as a foster and use our Adoption Hub to find a permanent, loving home.</p>
+            <a href="#adoption" class="learn-more-link" data-link="adoption">Browse adoptions <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Pet Category Selection Section -->
+      <section class="categories-section container">
+        <div class="section-header">
+          <div>
+            <h2>Explore Pet <span class="gradient-text">Care Guides</span></h2>
+            <p class="section-subtext">Select a pet type to unlock highly detailed, age-by-age growth care instructions and veterinary tips.</p>
+          </div>
+          <div class="search-category-wrapper glass-card">
+            <i class="fa-solid fa-magnifying-glass search-field-icon"></i>
+            <input type="text" id="category-search" placeholder="Search pet guide (e.g. Dog, Cat)...">
+          </div>
+        </div>
+
+        <div class="categories-grid" id="categories-grid-container">
+          <!-- Dynamically populated Category Cards or hardcoded for layout -->
+          <div class="category-card glass-card animate-hover-up" data-pet="dog">
+            <div class="cat-card-header">
+              <span class="cat-tag tag-dog"><i class="fa-solid fa-dog"></i> Popular</span>
+              <div class="cat-icon-container bg-dog"><i class="fa-solid fa-dog"></i></div>
+            </div>
+            <h3>Dog Guide</h3>
+            <p>Rescue guidelines, puppy timeline stages, detailed nutritional charts, and training tips for your canine buddy.</p>
+            <div class="cat-card-footer">
+              <span class="view-guide-btn">Unlock Guide <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          </div>
+
+          <div class="category-card glass-card animate-hover-up" data-pet="cat">
+            <div class="cat-card-header">
+              <span class="cat-tag tag-cat"><i class="fa-solid fa-cat"></i> Popular</span>
+              <div class="cat-icon-container bg-cat"><i class="fa-solid fa-cat"></i></div>
+            </div>
+            <h3>Cat Guide</h3>
+            <p>Street rescue protocols, hydration tricks, toxic food lists, vaccine trackers, and litter-box grooming training.</p>
+            <div class="cat-card-footer">
+              <span class="view-guide-btn">Unlock Guide <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          </div>
+
+          <div class="category-card glass-card animate-hover-up" data-pet="bird">
+            <div class="cat-card-header">
+              <span class="cat-tag tag-bird"><i class="fa-solid fa-dove"></i> Delicate</span>
+              <div class="cat-icon-container bg-bird"><i class="fa-solid fa-dove"></i></div>
+            </div>
+            <h3>Bird Guide</h3>
+            <p>Caring for orphaned nestlings, safe feeding formulas, nesting rules, and recognizing avian distress signals.</p>
+            <div class="cat-card-footer">
+              <span class="view-guide-btn">Unlock Guide <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          </div>
+
+          <div class="category-card glass-card animate-hover-up" data-pet="rabbit">
+            <div class="cat-card-header">
+              <span class="cat-tag tag-rabbit"><i class="fa-solid fa-carrot"></i> Fluffy</span>
+              <div class="cat-icon-container bg-rabbit"><i class="fa-solid fa-carrot"></i></div>
+            </div>
+            <h3>Rabbit Guide</h3>
+            <p>Digestive sensitivities guide, critical hay needs, safe chewing options, and gentle handling techniques.</p>
+            <div class="cat-card-footer">
+              <span class="view-guide-btn">Unlock Guide <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          </div>
+
+          <div class="category-card glass-card animate-hover-up" data-pet="fish">
+            <div class="cat-card-header">
+              <span class="cat-tag tag-fish"><i class="fa-solid fa-fish"></i> Aquatic</span>
+              <div class="cat-icon-container bg-fish"><i class="fa-solid fa-fish"></i></div>
+            </div>
+            <h3>Fish Guide</h3>
+            <p>Establishing water cycles, emergency tank setup, safe feeding frequency, and pH balance monitoring.</p>
+            <div class="cat-card-footer">
+              <span class="view-guide-btn">Unlock Guide <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          </div>
+
+          <div class="category-card glass-card animate-hover-up" data-pet="turtle">
+            <div class="cat-card-header">
+              <span class="cat-tag tag-turtle"><i class="fa-solid fa-shield-cat"></i> Hard-Shell</span>
+              <div class="cat-icon-container bg-turtle"><i class="fa-solid fa-shield-cat"></i></div>
+            </div>
+            <h3>Turtle Guide</h3>
+            <p>UVB basking setup, hydration parameters, specialized diet rules, and recognizing shell health alerts.</p>
+            <div class="cat-card-footer">
+              <span class="view-guide-btn">Unlock Guide <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Smart Features Quick Highlight Section -->
+      <section class="smart-features-highlights container">
+        <div class="section-header center">
+          <h2>Smart Care Tools</h2>
+          <p class="section-subtext">Try out our interactive utilities to easily plan and log your rescued animal's health markers.</p>
+        </div>
+        <div class="widgets-highlights-grid">
+          <div class="widget-intro-card glass-card">
+            <div class="wid-icon"><i class="fa-solid fa-calculator text-primary"></i></div>
+            <h4>Age Calculator</h4>
+            <p>Estimate human equivalent age and receive custom developmental advice based on pet category.</p>
+            <a href="#guides" class="btn btn-text widget-trigger" data-widget="calc">Try Tool <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+          <div class="widget-intro-card glass-card">
+            <div class="wid-icon"><i class="fa-solid fa-clock-rotate-left text-orange"></i></div>
+            <h4>Vaccination Reminder</h4>
+            <p>Track critical immunization milestones and save custom schedules directly to your browser.</p>
+            <a href="#guides" class="btn btn-text widget-trigger" data-widget="vax">Track Schedule <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+          <div class="widget-intro-card glass-card">
+            <div class="wid-icon"><i class="fa-solid fa-chart-line text-green"></i></div>
+            <h4>Growth Tracker</h4>
+            <p>Log pet weight entries to map progress. Perfect for ensuring rescued puppies or kittens gain weight.</p>
+            <a href="#guides" class="btn btn-text widget-trigger" data-widget="growth">Log Weights <i class="fa-solid fa-chevron-right"></i></a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive FAQ Section -->
+      <section class="faq-section container">
+        <div class="section-header center">
+          <h2>Frequently Asked Questions</h2>
+          <p class="section-subtext">Get quick answers to the most common questions faced by people when encountering a street pet.</p>
+        </div>
+        <div class="faq-accordion">
+          <div class="faq-item glass-card">
+            <div class="faq-question">
+              <h3>I found a street pet. What are the first three things I should do?</h3>
+              <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+            </div>
+            <div class="faq-answer">
+              <p>First, secure the pet safely without getting bitten or scratched; if they are aggressive or scared, use a blanket or lure them with food. Second, immediately check for severe wounds and offer clean water (never force them to drink). Third, check for ID tags, microchips, and keep them in a warm, dry, isolated space away from other household animals until you consult a veterinarian.</p>
+            </div>
+          </div>
+          <div class="faq-item glass-card">
+            <div class="faq-question">
+              <h3>Can I give cow's milk to a rescued puppy or kitten?</h3>
+              <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+            </div>
+            <div class="faq-answer">
+              <p><strong>Absolutely NOT!</strong> Cow's milk contains high lactose levels that cannot be digested by puppies and kittens, leading to severe dehydration, vomiting, and diarrhea, which can be fatal. Instead, use a commercial Puppy or Kitten Milk Replacer (KMR). In emergencies, use plain warm water mixed with a tiny pinch of salt and honey/glucose to rehydrate them until you obtain formula.</p>
+            </div>
+          </div>
+          <div class="faq-item glass-card">
+            <div class="faq-question">
+              <h3>How does the Adoption Hub work? Is it free?</h3>
+              <span class="faq-icon"><i class="fa-solid fa-plus"></i></span>
+            </div>
+            <div class="faq-answer">
+              <p>Yes, our Adoption Hub is 100% free! It is designed to connect kind rescuers who are fostering street animals with prospective loving families. You can upload pet details, specify rescue location, list vaccines administered, and add contact details. We vet listings in the session to protect animals from malicious exploiters.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Us section -->
+      <section class="contact-section container">
+        <div class="contact-grid glass-panel">
+          <div class="contact-info-panel">
+            <h2>Get In Touch</h2>
+            <p>Need support regarding street rescue operations, listing confirmation, or looking to volunteer at nearby shelters? Our team of pet health advocates is here to support you.</p>
+            <div class="info-list">
+              <div class="info-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                  <h4>Email Support</h4>
+                  <p>help@petcareguide.org</p>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                  <h4>Emergency Helpline</h4>
+                  <p>+1 (800) 555-PAWS (7297)</p>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                  <h4>Headquarters</h4>
+                  <p>104 Cozy Paws Way, Portland, OR</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form class="contact-form" id="contact-form">
+            <h3>Send Us a Message</h3>
+            <div class="form-group">
+              <label for="contact-name">Full Name</label>
+              <input type="text" id="contact-name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email Address</label>
+              <input type="email" id="contact-email" placeholder="john@example.com" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-phone">Phone (Optional)</label>
+                <input type="tel" id="contact-phone" placeholder="+1 234-567-8901">
+              </div>
+              <div class="form-group">
+                <label for="contact-subject">Topic</label>
+                <select id="contact-subject">
+                  <option value="general">General Inquiry</option>
+                  <option value="emergency">Emergency Advice</option>
+                  <option value="adoption">Adoption Assistance</option>
+                  <option value="volunteer">Volunteer Sign-up</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Your Message</label>
+              <textarea id="contact-message" rows="4" placeholder="How can we help you or the pet you rescued?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Submit Message <i class="fa-solid fa-paper-plane"></i></button>
+          </form>
+        </div>
+      </section>
+    </section>
+
+    <!-- PAGE 2: PET CARE DETAILS PAGE -->
+    <section id="guides-view" class="view-section">
+      <div class="guide-header-banner glass-panel">
+        <div class="container guide-banner-content">
+          <button class="back-home-btn" id="btn-back-home"><i class="fa-solid fa-arrow-left"></i> Home</button>
+          <div class="guide-title-area">
+            <div class="pet-icon-large bg-dog" id="guide-hero-icon"><i class="fa-solid fa-dog"></i></div>
+            <div>
+              <h1 id="guide-title">Dog Care Manual</h1>
+              <p id="guide-subtitle">A comprehensive breakdown of how to rescue, feed, vaccine, and raise a rescued canine.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-body container">
+        <!-- Sidebar Navigation within Guide -->
+        <aside class="guide-sidebar">
+          <div class="sidebar-block glass-card">
+            <h3>Guide Sections</h3>
+            <ul class="guide-nav-links">
+              <li><button class="g-nav-btn active" data-section="rescue-protocol"><i class="fa-solid fa-kit-medical"></i> Emergency Rescue Protocol</button></li>
+              <li><button class="g-nav-btn" data-section="timeline"><i class="fa-solid fa-timeline"></i> Age Growth Timeline</button></li>
+              <li><button class="g-nav-btn" data-section="diet"><i class="fa-solid fa-utensils"></i> Feeding & Nutrition Guide</button></li>
+              <li><button class="g-nav-btn" data-section="hygiene"><i class="fa-solid fa-soap"></i> Grooming & Hygiene</button></li>
+              <li><button class="g-nav-btn" data-section="lifestyle"><i class="fa-solid fa-bed"></i> Activity & Sleep Needs</button></li>
+              <li><button class="g-nav-btn" data-section="widgets"><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive Smart Tools</button></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-block glass-card select-pet-widget">
+            <h3>Switch Animal Guide</h3>
+            <select id="guide-pet-switcher" class="form-select">
+              <option value="dog">Dog (Canine)</option>
+              <option value="cat">Cat (Feline)</option>
+              <option value="bird">Bird (Avian)</option>
+              <option value="rabbit">Rabbit (Lagomorph)</option>
+              <option value="fish">Fish (Aquatic)</option>
+              <option value="turtle">Turtle (Reptilian)</option>
+            </select>
+          </div>
+        </aside>
+
+        <!-- Dynamic Main Content Holder of Guide -->
+        <div class="guide-main-content">
+          <!-- Subsection 1: Emergency Rescue Protocol -->
+          <div id="g-section-rescue-protocol" class="guide-content-block active">
+            <div class="glass-card section-card">
+              <span class="guide-section-badge"><i class="fa-solid fa-shield-heart"></i> Phase 1</span>
+              <h2>First 24 Hours: Emergency Rescue Protocol</h2>
+              <p>Finding a stray on the street can be chaotic. Here is what to do to stabilize the pet safely and correctly.</p>
+              
+              <div class="protocol-grid">
+                <div class="protocol-step-card danger-border">
+                  <div class="p-step-num">1</div>
+                  <h4>Assess & Secure Safely</h4>
+                  <p id="rescue-safety-info">Keep calm. Assess the animal's behavior. If injured, use a thick blanket or towel to gently cover their eyes to calm them down, and lift them slowly without twisting their limbs.</p>
+                </div>
+                <div class="protocol-step-card warning-border">
+                  <div class="p-step-num">2</div>
+                  <h4>Stabilize & Check Wounds</h4>
+                  <p id="rescue-stabilize-info">Place them in an isolated, well-ventilated carrier or quiet room. Inspect gently for deep cuts, bleeding, ticks, or broken bones. Do not apply harsh chemical disinfectants.</p>
+                </div>
+                <div class="protocol-step-card info-border">
+                  <div class="p-step-num">3</div>
+                  <h4>Hydrate (No Force Feeding)</h4>
+                  <p id="rescue-hydrate-info">Offer lukewarm water immediately. Dehydration is the #1 killer. If weak, place droplets of electrolyte water on their lips. Never force liquids down their throat as it causes aspiration.</p>
+                </div>
+              </div>
+
+              <div class="emergency-action-alert glass-card">
+                <div class="alert-icon-ring"><i class="fa-solid fa-circle-exclamation text-orange animate-pulse"></i></div>
+                <div class="alert-body">
+                  <h4>Critical First Aid Checklist</h4>
+                  <ul class="alert-checklist" id="rescue-first-aid-checklist">
+                    <li><input type="checkbox" id="chk-warmth" checked disabled> Maintain body heat: Place them on a warm towel or hot water bottle wrapped in cloth.</li>
+                    <li><input type="checkbox" id="chk-isolate"> Isolate from existing household pets to prevent viral/parasitic transmission.</li>
+                    <li><input type="checkbox" id="chk-novax"> Do not vaccinate or administer tick spot-on treatments immediately if weak or malnourished.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsection 2: Age Growth Timeline -->
+          <div id="g-section-timeline" class="guide-content-block">
+            <div class="glass-card section-card">
+              <h2>Interactive Age Development Timeline</h2>
+              <p>Rescued animals vary in age. Use the timeline slider below to check stage-specific requirements, feeding, vaccination timelines, and precautions.</p>
+              
+              <!-- Timeline Range Selector -->
+              <div class="timeline-slider-wrapper glass-panel">
+                <div class="slider-labels" id="timeline-labels-container">
+                  <!-- Labels inserted dynamically -->
+                </div>
+                <input type="range" id="timeline-range" min="0" max="6" value="0" class="timeline-range-input">
+                <div class="slider-indicator-track">
+                  <div class="indicator-bar" id="timeline-indicator-bar"></div>
+                </div>
+              </div>
+
+              <!-- Stage Care Card -->
+              <div class="stage-info-card glass-panel" id="stage-info-display">
+                <div class="stage-card-header">
+                  <span class="stage-pill" id="stage-age-title">Newborn (0-2 weeks)</span>
+                  <div class="stage-vax-tag" id="stage-vax-status"><i class="fa-solid fa-syringe"></i> No Vaccines Yet</div>
+                </div>
+                
+                <div class="stage-grid">
+                  <div class="stage-detail-block">
+                    <h4><i class="fa-solid fa-cookie-bite text-orange"></i> Food & Nutrition</h4>
+                    <p id="stage-food-text">Warm puppy milk replacer (KMR/esbilac) fed via syringe/dropper every 2 hours. Absolutely no solid foods or cow milk.</p>
+                  </div>
+                  <div class="stage-detail-block">
+                    <h4><i class="fa-solid fa-heart-pulse text-green"></i> Key Care Tips</h4>
+                    <p id="stage-care-text">Help them urinate/defecate by rubbing their belly and groin gently with a warm, damp cotton ball after each meal.</p>
+                  </div>
+                </div>
+                
+                <div class="stage-precautions-alert">
+                  <strong><i class="fa-solid fa-triangle-exclamation"></i> Critical Precautions:</strong>
+                  <span id="stage-precaution-text">Keep them constantly warm. Hypothermia sets in rapidly. Do not let them sleep directly on bare floors.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsection 3: Feeding & Nutrition Guide -->
+          <div id="g-section-diet" class="guide-content-block">
+            <div class="glass-card section-card">
+              <h2>Feeding Chart & Toxic Foods</h2>
+              <p>Rescued street pets have highly sensitive stomachs, often worsened by starvation. Ensure you only feed safe ingredients.</p>
+              
+              <div class="food-safety-grid">
+                <div class="food-column safe-card glass-panel">
+                  <h3><i class="fa-solid fa-circle-check text-green"></i> Safe Ingredients</h3>
+                  <ul class="food-bullet-list" id="food-safe-list">
+                    <li>Boiled boneless chicken (no salt/spices)</li>
+                    <li>Cooked white rice or pumpkin mash</li>
+                    <li>Plain scrambled eggs (no butter)</li>
+                  </ul>
+                </div>
+                <div class="food-column toxic-card glass-panel">
+                  <h3><i class="fa-solid fa-circle-xmark text-danger"></i> Toxic & Dangerous</h3>
+                  <ul class="food-bullet-list" id="food-toxic-list">
+                    <li>Chocolate & Cocoa products (fatal)</li>
+                    <li>Onions, garlic, and chives</li>
+                    <li>Grapes, raisins, and cooked bones</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="feeding-stats-row">
+                <div class="f-stat-card glass-card">
+                  <i class="fa-solid fa-clock text-primary"></i>
+                  <h4>Frequency</h4>
+                  <p id="food-frequency-text">3 to 4 times daily for growing pups/kittens; twice daily for stable adult animals.</p>
+                </div>
+                <div class="f-stat-card glass-card">
+                  <i class="fa-solid fa-droplet text-teal"></i>
+                  <h4>Water Intake</h4>
+                  <p id="food-water-text">Fresh water must be accessible 24/7. Rescued animals typically require 50-70ml per kg daily.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsection 4: Grooming & Hygiene -->
+          <div id="g-section-hygiene" class="guide-content-block">
+            <div class="glass-card section-card">
+              <h2>Grooming, Cleaning & Parasite Control</h2>
+              <p>Stray animals often harbor external parasites, dirt, or dermatological issues. Follow these steps to clean them safely.</p>
+              
+              <div class="hygiene-timeline">
+                <div class="hygiene-step glass-panel">
+                  <div class="h-icon"><i class="fa-solid fa-bug text-orange"></i></div>
+                  <div class="h-body">
+                    <h4>Flea & Tick Management</h4>
+                    <p id="hygiene-fleas">Never bathe a severely weak animal. Brush them gently. Use a comb dipped in soapy water to manually strip fleas. Consult a vet before applying chemical spot-ons.</p>
+                  </div>
+                </div>
+                <div class="hygiene-step glass-panel">
+                  <div class="h-icon"><i class="fa-solid fa-shower text-blue"></i></div>
+                  <div class="h-body">
+                    <h4>First Bath Protocol</h4>
+                    <p id="hygiene-bath">Only bathe once the pet has eaten and stabilized for 3-4 days. Use lukewarm water and gentle baby/oatmeal shampoo. Blow dry immediately so they do not catch a cold.</p>
+                  </div>
+                </div>
+                <div class="hygiene-step glass-panel">
+                  <div class="h-icon"><i class="fa-solid fa-broom text-teal"></i></div>
+                  <div class="h-body">
+                    <h4>Sanitizing the Space</h4>
+                    <p id="hygiene-space">Use pet-safe diluted vinegar or enzymatic cleaners to scrub their room. Avoid bleach, which irritates their respiratory tracts.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsection 5: Activity & Sleep Needs -->
+          <div id="g-section-lifestyle" class="guide-content-block">
+            <div class="glass-card section-card">
+              <h2>Activity, Sleep & Health Indicators</h2>
+              <p>Establish healthy sleep structures and understand behavioral guidelines for a healthy transition.</p>
+              
+              <div class="lifestyle-grid">
+                <div class="lifestyle-item glass-panel">
+                  <i class="fa-solid fa-bed text-primary"></i>
+                  <h4>Sleep Requirements</h4>
+                  <p id="lifestyle-sleep">Puppies and kittens sleep up to 18-20 hours. Ensure their den is in a low-traffic zone where they feel entirely secure from startles.</p>
+                </div>
+                <div class="lifestyle-item glass-panel">
+                  <i class="fa-solid fa-person-walking-with-cane text-green"></i>
+                  <h4>Exercise & Play</h4>
+                  <p id="lifestyle-exercise">Limit outdoor walks initially to prevent exposure to diseases like Parvovirus. Focus on indoor stimulation and gentle bonding toys.</p>
+                </div>
+                <div class="lifestyle-item glass-panel">
+                  <i class="fa-solid fa-stethoscope text-orange"></i>
+                  <h4>Common Disease Warnings</h4>
+                  <p id="lifestyle-diseases">Monitor for: lethargy, watery nose/eyes, loose stools, or lack of appetite. These are signs of viral infections requiring vet attention.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsection 6: Interactive Smart Tools -->
+          <div id="g-section-widgets" class="guide-content-block">
+            <!-- WIDGET A: Pet Age Calculator -->
+            <div class="glass-card section-card widget-card" id="widget-calc-anchor">
+              <span class="widget-badge"><i class="fa-solid fa-calculator"></i> Tool A</span>
+              <h2>Pet Age & Human Year Calculator</h2>
+              <p>Unsure of your rescued pet's age? Key in their estimated weeks or months to see their developmental equivalent in human years and developmental tips.</p>
+              
+              <div class="widget-box-calc glass-panel">
+                <div class="calc-inputs-row">
+                  <div class="form-group">
+                    <label for="calc-species">Pet Species</label>
+                    <select id="calc-species" class="form-select">
+                      <option value="dog">Dog (Canine)</option>
+                      <option value="cat">Cat (Feline)</option>
+                      <option value="rabbit">Rabbit</option>
+                      <option value="turtle">Turtle</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="calc-age-val">Current Age Value</label>
+                    <input type="number" id="calc-age-val" min="1" max="150" value="4" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="calc-age-unit">Unit</label>
+                    <select id="calc-age-unit" class="form-select">
+                      <option value="weeks">Weeks</option>
+                      <option value="months" selected>Months</option>
+                      <option value="years">Years</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-calculate-age"><i class="fa-solid fa-equals"></i> Calculate Age</button>
+
+                <div class="calc-result-box glass-card hidden" id="calc-result-area">
+                  <div class="res-years-circle">
+                    <span id="calc-res-human-years">2</span>
+                    <span class="unit">Human Years</span>
+                  </div>
+                  <div class="res-details">
+                    <h4 id="calc-res-stage">Stage: Toddler / Puppy</h4>
+                    <p id="calc-res-advice">Your pet is undergoing high social integration. Build boundaries, establish solid food feeding, and vaccinate immediately.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WIDGET B: Vaccination Tracker & Reminders -->
+            <div class="glass-card section-card widget-card" id="widget-vax-anchor">
+              <span class="widget-badge"><i class="fa-solid fa-clock-rotate-left"></i> Tool B</span>
+              <h2>Vaccination Milestone & Reminder System</h2>
+              <p>Keep track of essential shots for street rescues. Check off what they have received, set local reminders, and save their health card details.</p>
+              
+              <div class="widget-box-vax glass-panel">
+                <div class="vax-setup-row">
+                  <div class="form-group">
+                    <label for="vax-pet-name">Pet's Name</label>
+                    <input type="text" id="vax-pet-name" placeholder="E.g., Lucky" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="vax-pet-type">Species</label>
+                    <select id="vax-pet-type" class="form-select">
+                      <option value="dog">Dog</option>
+                      <option value="cat">Cat</option>
+                    </select>
+                  </div>
+                  <button type="button" class="btn btn-secondary" id="btn-load-vax"><i class="fa-solid fa-rotate"></i> Load Schedule</button>
+                </div>
+
+                <div class="vax-card-display hidden" id="vax-schedule-card">
+                  <div class="vax-card-header">
+                    <h4 id="vax-card-title">Lucky's Immunization Profile</h4>
+                    <span class="completion-bar-txt" id="vax-progress-percent">0% Completed</span>
+                  </div>
+                  <div class="vax-progress-bar-bg">
+                    <div class="vax-progress-bar" id="vax-progress-fill"></div>
+                  </div>
+
+                  <ul class="vax-checklist-container" id="vax-checklist-items">
+                    <!-- Checkboxes generated dynamically -->
+                  </ul>
+
+                  <div class="vax-footer-actions">
+                    <button class="btn btn-secondary btn-sm" id="btn-save-vax"><i class="fa-solid fa-floppy-disk"></i> Save Progress</button>
+                    <button class="btn btn-primary btn-sm" id="btn-alert-vax"><i class="fa-solid fa-bell"></i> Set Notification Alerts</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WIDGET C: Pet Growth Tracker -->
+            <div class="glass-card section-card widget-card" id="widget-growth-anchor">
+              <span class="widget-badge"><i class="fa-solid fa-chart-line"></i> Tool C</span>
+              <h2>Pet Weight & Growth Logger</h2>
+              <p>Help your rescued pet gain healthy mass. Log periodic weights to track growth patterns in the browser table.</p>
+              
+              <div class="widget-box-growth glass-panel">
+                <form id="growth-log-form" class="growth-form-row">
+                  <div class="form-group">
+                    <label for="growth-date">Log Date</label>
+                    <input type="date" id="growth-date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="growth-weight">Weight (kg)</label>
+                    <input type="number" id="growth-weight" step="0.05" min="0.05" max="90" placeholder="E.g., 2.3" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="growth-notes">Notes</label>
+                    <input type="text" id="growth-notes" placeholder="Healthy feeding, stable stools">
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-add-log"><i class="fa-solid fa-plus"></i> Add Log</button>
+                </form>
+
+                <div class="growth-table-wrapper">
+                  <table class="growth-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Weight (kg)</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="growth-table-body">
+                      <!-- Rows loaded dynamically -->
+                      <tr class="empty-row"><td colspan="4">No growth logs recorded yet. Start logging above!</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="growth-summary-alert glass-card">
+                  <i class="fa-solid fa-circle-info text-primary"></i>
+                  <span id="growth-summary-text">Rescued animals should maintain a steady, positive growth line. Consult a clinic if a sudden weight drop is recorded.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: FEEDING GUIDE SECTION -->
+    <section id="feeding-view" class="view-section">
+      <div class="section-banner glass-panel">
+        <div class="container banner-inner">
+          <h2>Interactive <span class="gradient-text">Feeding Center</span></h2>
+          <p>Select your animal to see dynamic safety charts, required frequencies, and essential water calculations.</p>
+          
+          <div class="pet-tab-filters" id="feeding-tabs-container">
+            <button class="feed-tab-btn active" data-pet="dog"><i class="fa-solid fa-dog"></i> Dogs</button>
+            <button class="feed-tab-btn" data-pet="cat"><i class="fa-solid fa-cat"></i> Cats</button>
+            <button class="feed-tab-btn" data-pet="bird"><i class="fa-solid fa-dove"></i> Birds</button>
+            <button class="feed-tab-btn" data-pet="rabbit"><i class="fa-solid fa-carrot"></i> Rabbits</button>
+            <button class="feed-tab-btn" data-pet="fish"><i class="fa-solid fa-fish"></i> Fish</button>
+            <button class="feed-tab-btn" data-pet="turtle"><i class="fa-solid fa-shield-cat"></i> Turtles</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container feeding-body-grid">
+        <!-- Interactive Tables safe/danger -->
+        <div class="feeding-tables-pane glass-card">
+          <div class="table-toggle-bar">
+            <h3>Nutritional Safety Log</h3>
+            <div class="safety-search-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="food-item-filter" placeholder="Filter food (e.g. egg, apple)...">
+            </div>
+          </div>
+
+          <div class="safety-cards-columns">
+            <div class="safety-column safe-zone glass-panel">
+              <h4 class="headline-with-icon"><i class="fa-solid fa-heart text-green"></i> 100% Safe Foods</h4>
+              <div class="safety-scroll-area" id="safe-foods-scroller">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+            <div class="safety-column toxic-zone glass-panel">
+              <h4 class="headline-with-icon"><i class="fa-solid fa-skull-crossbones text-danger"></i> Highly Toxic / Avoid</h4>
+              <div class="safety-scroll-area" id="toxic-foods-scroller">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Frequency and metrics card -->
+        <div class="feeding-metrics-pane">
+          <div class="glass-card metric-card">
+            <h3>Feeding Milestones</h3>
+            <div class="metric-block-content" id="feed-milestones-area">
+              <!-- Dynamically rendered frequency guidelines -->
+            </div>
+          </div>
+
+          <div class="glass-card metric-card water-widget">
+            <h3>Water Calculator</h3>
+            <p>Dehydration kills rescued animals fast. Input your pet's current weight to calculate their daily fresh water requirement.</p>
+            <div class="water-calc-input-group">
+              <input type="number" id="water-weight-input" min="0.1" max="100" value="5" step="0.1">
+              <span class="unit-label">kg</span>
+              <button class="btn btn-primary btn-sm" id="btn-calc-water">Calculate</button>
+            </div>
+            <div class="water-calc-result glass-panel hidden" id="water-result-box">
+              <i class="fa-solid fa-droplet text-teal animate-bounce"></i>
+              <div>
+                <strong id="water-needed-val">350 - 450 ml</strong>
+                <span>Daily Fresh Water Required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: RESCUE TIPS SECTION -->
+    <section id="rescue-view" class="view-section">
+      <div class="section-banner rescue-banner glass-panel">
+        <div class="container banner-inner">
+          <h2>Emergency <span class="gradient-text">Rescue Toolkit</span></h2>
+          <p>First-hand advice on handling injured, weak, or dehydrated street pets. Keep yourself safe while saving a life.</p>
+        </div>
+      </div>
+
+      <div class="container rescue-body-grid">
+        <!-- Main accordion list of scenarios -->
+        <div class="rescue-scenarios-panel">
+          <div class="section-header">
+            <h2>Common Rescue Scenarios</h2>
+            <p>Click on any scenario below to view instant, step-by-step first aid guides.</p>
+          </div>
+
+          <div class="rescue-accordion">
+            <div class="rescue-accordion-item glass-card active">
+              <div class="rescue-header">
+                <span class="rescue-badge bg-orange"><i class="fa-solid fa-triangle-exclamation"></i> Injury</span>
+                <h3>1. How to Handle Injured Street Animals</h3>
+                <i class="fa-solid fa-chevron-down acc-arrow"></i>
+              </div>
+              <div class="rescue-content">
+                <p>Injured animals are highly terrified and prone to biting out of self-defense, even if they are naturally friendly.</p>
+                <ul class="content-steps">
+                  <li><strong>Safety First:</strong> Put on thick gloves. Keep your face away from their head. If it's a dog, you can make a temporary muzzle using soft gauze or a leash.</li>
+                  <li><strong>Lifting:</strong> Gently slide a heavy coat, cardboard sheet, or board underneath them to serve as a stretcher. Do not put pressure on their chest or abdomen.</li>
+                  <li><strong>Bleeding Control:</strong> Apply clean direct pressure to active wounds with sterile gauze or clean towels. Do not apply tight tourniquets.</li>
+                  <li><strong>Immediate Vet:</strong> Keep them warm and secure in a quiet box, and drive directly to an open animal clinic.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rescue-accordion-item glass-card">
+              <div class="rescue-header">
+                <span class="rescue-badge bg-red"><i class="fa-solid fa-baby"></i> Newborns</span>
+                <h3>2. Caring for Weak, Orphaned Newborns</h3>
+                <i class="fa-solid fa-chevron-down acc-arrow"></i>
+              </div>
+              <div class="rescue-content">
+                <p>Newborn puppies or kittens found without their mother are extremely fragile and can pass away within hours if their body heat drops.</p>
+                <ul class="content-steps">
+                  <li><strong>Do Not Bathe:</strong> Weak newborns cannot regulate their temperature. Wipe them down gently with a dry paper towel if needed.</li>
+                  <li><strong>Warmth (Highest Priority):</strong> Put them in a cardboard box lined with fleece and a heating pad set to low, wrapped in towels. Make sure they have room to crawl away if it gets too hot.</li>
+                  <li><strong>Do Not Feed Milk:</strong> Never feed standard milk or solid food. Feed warm kitten or puppy milk replacer via a syringe or small pet bottle, drop by drop.</li>
+                  <li><strong>Stimulation:</strong> Wipe their rear area with a warm damp cotton swab after each feed to stimulate bowel movements.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rescue-accordion-item glass-card">
+              <div class="rescue-header">
+                <span class="rescue-badge bg-teal"><i class="fa-solid fa-droplet"></i> Dehydration</span>
+                <h3>3. Treatment for Severely Dehydrated Strays</h3>
+                <i class="fa-solid fa-chevron-down acc-arrow"></i>
+              </div>
+              <div class="rescue-content">
+                <p>Strays wandering for days on streets suffer from chronic dehydration, which causes kidney failure and lethargy.</p>
+                <ul class="content-steps">
+                  <li><strong>Identify Dehydration:</strong> Pull up the skin over their shoulders (the scruff). If the skin snaps back instantly, they are hydrated. If the skin stays tented or returns very slowly, they are severely dehydrated.</li>
+                  <li><strong>Hydration Mix:</strong> Offer plain cool water first. If they reject it, offer unflavored electrolyte water (like Pedialyte) or low-sodium chicken broth.</li>
+                  <li><strong>Lip Rubbing:</strong> If too weak to drink, use a dropper to place drops on their tongue and gums. Do not force large amounts down their throat.</li>
+                  <li><strong>Vet Fluids:</strong> Severe dehydration usually requires subcutaneous or intravenous fluids administered at a clinic.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rescue-accordion-item glass-card">
+              <div class="rescue-header">
+                <span class="rescue-badge bg-blue"><i class="fa-solid fa-shield-halved"></i> Street Safety</span>
+                <h3>4. Street Rescue Safety Protocol for Rescuers</h3>
+                <i class="fa-solid fa-chevron-down acc-arrow"></i>
+              </div>
+              <div class="rescue-content">
+                <p>Your safety is paramount. You cannot save the animal if you get severely injured yourself.</p>
+                <ul class="content-steps">
+                  <li><strong>Road Traffic Safety:</strong> Never run into heavy traffic to chase an animal. Use a vehicle or warning hazard lights to secure the area if possible.</li>
+                  <li><strong>Rabies Awareness:</strong> Avoid animals showing heavy salivation, aggression, confusion, or lack of fear. Call local animal control authorities instead.</li>
+                  <li><strong>Bite Wounds:</strong> If bitten or scratched by a street animal, immediately wash the wound with soap and water for 15 minutes, and seek immediate medical attention for rabies vaccines.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Fast action card checklist side -->
+        <div class="rescue-side-column">
+          <div class="glass-panel quick-action-kit-card">
+            <div class="icon-header">
+              <i class="fa-solid fa-toolbox text-orange animate-pulse"></i>
+              <h3>Rescuer's Emergency Kit</h3>
+            </div>
+            <p>Keep these items ready in your car or home to be prepared for stray rescue operations:</p>
+            <ul class="kit-checklist">
+              <li><i class="fa-solid fa-square-check text-primary"></i> Heavy fleece blanket or thick towels</li>
+              <li><i class="fa-solid fa-square-check text-primary"></i> A sturdy cardboard box or carrier</li>
+              <li><i class="fa-solid fa-square-check text-primary"></i> Slip lead / dog leash & harness</li>
+              <li><i class="fa-solid fa-square-check text-primary"></i> Sterile gauze & elastic bandages</li>
+              <li><i class="fa-solid fa-square-check text-primary"></i> Electrolyte powder / unflavored Pedialyte</li>
+              <li><i class="fa-solid fa-square-check text-primary"></i> Canned soft dog & cat food (highly aromatic)</li>
+              <li><i class="fa-solid fa-square-check text-primary"></i> Clean disposable gloves & hand sanitizer</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: NEARBY VET FINDER -->
+    <section id="vets-view" class="view-section">
+      <div class="section-banner glass-panel">
+        <div class="container banner-inner">
+          <h2>Find Nearby <span class="gradient-text">Veterinary Clinics</span></h2>
+          <p>Locate the closest clinics, hospitals, and emergency animal care shelters. Review ratings, call details, and maps.</p>
+        </div>
+      </div>
+
+      <div class="container vets-layout">
+        <!-- Sidebar search and listings -->
+        <div class="vets-search-panel glass-card">
+          <div class="vets-filter-bar">
+            <div class="vet-search-field">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="vet-city-search" placeholder="Search by name or city (e.g. Portland, Seattle)...">
+            </div>
+            <select id="vet-status-filter" class="form-select">
+              <option value="all">All Clinics</option>
+              <option value="open">Open Now</option>
+            </select>
+          </div>
+
+          <div class="vets-list" id="vets-list-container">
+            <!-- Dynamic Vet Cards Injected Here -->
+          </div>
+        </div>
+
+        <!-- Google Maps Embed/Mock Section -->
+        <div class="vets-map-panel glass-card">
+          <div class="map-header">
+            <h3>Interactive Clinic Map Locator</h3>
+            <span class="map-badge"><i class="fa-solid fa-location-crosshairs"></i> Mock GPS Active</span>
+          </div>
+          <!-- Interactive Map Container -->
+          <div id="vet-leaflet-map" class="vet-map-placeholder"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: ADOPTION SECTION -->
+    <section id="adoption-view" class="view-section">
+      <div class="section-banner glass-panel">
+        <div class="container banner-inner">
+          <h2>Street Pet <span class="gradient-text">Adoption Hub</span></h2>
+          <p>Help a rescued stray find a forever home, or browse current animals raised by fosters that are ready for adoption.</p>
+        </div>
+      </div>
+
+      <div class="container adoption-grid">
+        <!-- Adoption list left -->
+        <div class="adoption-feed-panel">
+          <div class="feed-header-bar">
+            <h2>Pets Available for Adoption</h2>
+            <div class="filter-pills" id="adopt-filter-pills">
+              <button class="pill active" data-species="all">All Pets</button>
+              <button class="pill" data-species="dog">Dogs</button>
+              <button class="pill" data-species="cat">Cats</button>
+              <button class="pill" data-species="other">Others</button>
+            </div>
+          </div>
+
+          <div class="adoption-cards-grid" id="adoption-feed-container">
+            <!-- Injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Form Right -->
+        <div class="adoption-form-panel">
+          <div class="glass-card adopt-form-card">
+            <h3><i class="fa-solid fa-file-signature text-primary"></i> Post a Rescued Pet</h3>
+            <p>Fostering a street animal? Submit their details and photos below so prospective adopters can reach out to you.</p>
+            
+            <form id="adopt-post-form" class="adopt-upload-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adopt-pet-name">Pet Name</label>
+                  <input type="text" id="adopt-pet-name" placeholder="Lucky" required>
+                </div>
+                <div class="form-group">
+                  <label for="adopt-pet-species">Species</label>
+                  <select id="adopt-pet-species" required>
+                    <option value="dog">Dog</option>
+                    <option value="cat">Cat</option>
+                    <option value="rabbit">Rabbit</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adopt-pet-age">Estimated Age</label>
+                  <input type="text" id="adopt-pet-age" placeholder="3 months / 2 years" required>
+                </div>
+                <div class="form-group">
+                  <label for="adopt-pet-gender">Gender</label>
+                  <select id="adopt-pet-gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Unknown">Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="adopt-pet-location">Rescue Location (City/Area)</label>
+                <input type="text" id="adopt-pet-location" placeholder="Downtown, Portland" required>
+              </div>
+
+              <div class="form-group">
+                <label for="adopt-pet-desc">Rescue Story & Habits</label>
+                <textarea id="adopt-pet-desc" rows="3" placeholder="Found shivering on street. Very friendly, eats soft food, litter trained..." required></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adopt-contact-phone">Contact Phone</label>
+                  <input type="tel" id="adopt-contact-phone" placeholder="+1 (503) 555-1022" required>
+                </div>
+                <div class="form-group">
+                  <label for="adopt-pet-img">Upload Image</label>
+                  <input type="file" id="adopt-pet-img" accept="image/*">
+                </div>
+              </div>
+
+              <!-- Live dynamic preview container -->
+              <div class="image-upload-preview hidden" id="adopt-image-preview-box">
+                <img id="adopt-image-preview-src" src="" alt="Live Preview">
+                <button type="button" class="btn btn-sm btn-danger" id="btn-remove-preview"><i class="fa-solid fa-trash"></i> Remove</button>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full"><i class="fa-solid fa-heart-circle-plus"></i> Post Pet for Adoption</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Sticky Footer -->
+  <footer class="main-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand-col">
+        <a href="#" class="logo-area">
+          <div class="logo-icon-bg"><i class="fa-solid fa-paw"></i></div>
+          <span class="logo-text">PetCare <span class="highlight">Guide</span></span>
+        </a>
+        <p>A companion portal designed to give street-rescued and stray animals a secondary chance at life, nutrition, and safety.</p>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Rescuer Toolbar</h4>
+        <ul>
+          <li><a href="#guides" data-tab="guides">Care Timelines</a></li>
+          <li><a href="#feeding" data-tab="feeding">Toxic Food Lists</a></li>
+          <li><a href="#rescue" data-tab="rescue">First Aid Guides</a></li>
+          <li><a href="#vets" data-tab="vets">Locate Vet Clinics</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links-col">
+        <h4>Get Involved</h4>
+        <ul>
+          <li><a href="#adoption" data-tab="adoption">Adopt a Stray</a></li>
+          <li><a href="#home" data-tab="home">Volunteer Options</a></li>
+          <li><a href="#home" data-tab="home">Donate Veterinary Fund</a></li>
+          <li><a href="#home" data-tab="home">Success Stories</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-newsletter-col">
+        <h4>Stay Updated</h4>
+        <p>Subscribe to receive emergency veterinary alerts, guides, and adoption alerts.</p>
+        <form class="newsletter-form" id="newsletter-form">
+          <input type="email" placeholder="john@example.com" required aria-label="Newsletter email">
+          <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container fb-inner">
+        <p>&copy; 2026 PetCare Guide Platform. All rights reserved. Created with love for stray animals.</p>
+        <ul class="footer-bottom-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Safety Disclaimers</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SMART FEATURE: Floating AI Chatbot Widget -->
+  <div class="chatbot-widget-container" id="chatbot-widget">
+    <!-- Chat Icon Trigger -->
+    <button class="chatbot-trigger-btn shadow-lg" id="btn-chatbot-trigger" aria-label="Open Pawsy Rescue Chatbot">
+      <i class="fa-solid fa-comment-medical chat-icon-open"></i>
+      <i class="fa-solid fa-times chat-icon-close hidden"></i>
+      <span class="chat-pulse-alert"></span>
+    </button>
+
+    <!-- Chat window panel -->
+    <div class="chatbot-window glass-panel shadow-2xl hidden" id="chatbot-window">
+      <div class="chatbot-header">
+        <div class="chat-avatar-area">
+          <div class="chat-bot-avatar">
+            <i class="fa-solid fa-user-doctor"></i>
+          </div>
+          <div class="chat-bot-info">
+            <h4>Pawsy Emergency AI</h4>
+            <span class="status-indicator"><span class="pulse-dot"></span> Online - AI Assistant</span>
+          </div>
+        </div>
+        <button class="chat-close-btn" id="btn-chat-close" aria-label="Close Chat"><i class="fa-solid fa-times"></i></button>
+      </div>
+
+      <!-- Chat Messages Scroll Container -->
+      <div class="chat-messages-container" id="chat-messages-container">
+        <div class="chat-bubble bot-message">
+          <p>Hi there! 🐾 I'm <strong>Pawsy</strong>, your AI Pet Rescue assistant. Did you find a street animal in need? Tell me what pet it is (dog, cat, bird, etc.) or ask me an emergency question like:</p>
+          <div class="chat-quick-chips">
+            <button class="chip-btn" data-query="found dehydrated kitten">Dehydrated kitten?</button>
+            <button class="chip-btn" data-query="dog ate chocolate">Dog ate chocolate?</button>
+            <button class="chip-btn" data-query="how to lift injured stray">Lifting injured stray?</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="chat-typing-indicator hidden" id="chat-typing-indicator">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <!-- Chat Input form -->
+      <form class="chat-input-area" id="chat-input-form">
+        <input type="text" id="chat-user-input" placeholder="Type emergency query (e.g. bleeding cat)..." required autocomplete="off">
+        <button type="submit" class="btn-send-chat" aria-label="Send message"><i class="fa-solid fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Leaflet Map Script -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Local Custom Script -->
+  <script src="script.js"></script>
+</body>
+</html>
