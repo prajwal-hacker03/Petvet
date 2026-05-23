@@ -29,4 +29,3 @@ Pet adoption database
 Vaccination reminders
 Author 👨‍💻
 
-Developed by Vaaridhi 
