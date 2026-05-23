@@ -29,3 +29,7 @@ Pet adoption database
 Vaccination reminders
 Author 👨‍💻
 
+Developed by Vaaridhi and her team. 
+Department:- Computer Science of Engineering(CSE) 2nd year 
+
+
